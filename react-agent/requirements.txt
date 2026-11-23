@@ -1,1 +1,4 @@
+openai-codex==0.171.0
+mcp>=1.30,<2
+openai-agents
 ollama>=0.4
