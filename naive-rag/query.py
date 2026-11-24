@@ -8,11 +8,38 @@ Needs: store.json from ingest.py, ollama serve running.
 import json
 import sys
 from pathlib import Path
+from typing import TypedDict
 
 import numpy as np
 import ollama
 
 from config import EMBED_MODEL, LLM_MODEL, STORE_FILE, TOP_K
+
+
+class Chunk(TypedDict):
+    id: str
+    source: str
+    text: str
+    embedding: list[float]
+
+
+UNKNOWN_ANSWER = "I don't know from these documents."
+
+
+def synthesize(question: str, chunks: list[Chunk]) -> str:
+    context = "\n\n".join(f"[{item['source']}] {item['text']}" for item in chunks)
+    resp = ollama.chat(
+        model=LLM_MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": "Answer from the context below. You may compare and combine facts from different documents to answer. Use only facts present in the context, do not invent new facts. If the context truly contains no relevant facts, say 'I don't know from these documents.' Cite the source file name.",
+            },
+            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"},
+        ],
+    )
+    return resp["message"]["content"]
+
 
 def cosine(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
@@ -41,18 +68,8 @@ def main() -> None:
     for score, item in top:
         print(f"  {score:.3f}  {item['id']}")
 
-    context = "\n\n".join(f"[{item['source']}] {item['text']}" for _, item in top)
-    resp = ollama.chat(
-        model=LLM_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "Answer from the context below. You may compare and combine facts from different documents to answer. Use only facts present in the context, do not invent new facts. If the context truly contains no relevant facts, say 'I don't know from these documents.' Cite the source file name.",
-            },
-            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"},
-        ],
-    )
-    print(f"\nAnswer:\n{resp['message']['content']}")
+    answer = synthesize(question, [item for _, item in top])
+    print(f"\nAnswer:\n{answer}")
     print(f"\nSources: {', '.join(sorted({item['source'] for _, item in top}))}")
 
 

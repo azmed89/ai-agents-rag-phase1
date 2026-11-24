@@ -17,6 +17,16 @@ python ingest.py
 python query.py "How does the Jira cursor-ai automation work?"
 ```
 
+### LangGraph on Windows
+
+From the `naive-rag` folder in Command Prompt, use the project's Python environment. If you already have `.venv`, skip the first command.
+
+```cmd
+py -3.12 -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe graph.py "What is the difference between Onessta delivery ops and affiliate flow?"
+```
+
 ## Corpus
 
 `docs/` has 10 short docs from Med's real work — Onessta, Jira → Cursor SDK, OpenClaw, and the 5 GenAI demos. Replace them with your real PDFs/Markdown later; the pipeline doesn't care.

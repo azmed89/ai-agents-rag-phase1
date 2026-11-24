@@ -1,2 +1,6 @@
 ollama>=0.4
 numpy>=1.26
+langgraph
+# Native wheels verified with LangGraph on the project's Windows setup.
+xxhash==3.6.0; sys_platform == "win32"
+ormsgpack==1.12.0; sys_platform == "win32"
