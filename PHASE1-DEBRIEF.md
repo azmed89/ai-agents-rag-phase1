@@ -17,19 +17,19 @@
 
 - **Session 1, llama3.1:latest, TODO task:** 8 steps, correct final answer, but drift — repeated `list_dir("demo")`, model inventing its own `Observation:` lines inside its reply, misreading `ls` output.
 - **Same task, llama3.1:8b:** 4 steps, clean — list root, list demo, `read_file("TODO.md")` errors, final answer "No TODO file found". No invented Observations, no loops.
-- **Session 2, llama3.1:8b, write_file test:** 4 steps. Wrote `"Demo mini-project: Onessta order flow (sample) handling order creation and courier assignment"` to `demo/notes.txt` and read it back; final answer matches the file. Drift remained (two Actions in one reply, redundant re-reads, an invented "fix errors").
+- **Session 2, llama3.1:8b, write_file test:** 4 steps. Wrote `"Demo mini-project: Startup order flow (sample) handling order creation and courier assignment"` to `demo/notes.txt` and read it back; final answer matches the file. Drift remained (two Actions in one reply, redundant re-reads, an invented "fix errors").
 - **Session 2, weather in Casablanca (no possible tool):** 5 steps, final answer "Unknown". It tried README, `ls`, `list_dir`, even invented a `run_command("weather")` with a fake error — then stopped early instead of burning all 10 steps or inventing a temperature.
 
 ## Track B — the one failure, and the fix
 
-Question: *"What is the difference between Onessta delivery ops and affiliate flow?"*
+Question: *"What is the difference between Startup delivery ops and affiliate flow?"*
 
 Retrieval was perfect, first try:
 
 ```
-0.847  02-onessta-affiliate-flow.md
-0.785  03-onessta-delivery-ops.md
-0.746  01-onessta-overview.md
+0.847  02-startup-affiliate-flow.md
+0.785  03-startup-delivery-ops.md
+0.746  01-startup-overview.md
 0.477  07-smart-invoice-processor.md
 0.466  04-cursor-sdk-jira-automation.md
 ```
@@ -44,7 +44,7 @@ Fix (Sun 22 Nov, one variable only — chunk 300 and top-k 5 unchanged):
 "Answer from the context below. You may compare and combine facts from different documents to answer. Use only facts present in the context, do not invent new facts. If the context truly contains no relevant facts, say 'I don't know from these documents.' Cite the source file name."
 ```
 
-Same scores, correct synthesized answer citing `02-onessta-affiliate-flow.md` + `03-onessta-delivery-ops.md`. **9/10 → 10/10. The bottleneck was the prompt, not the retrieval.**
+Same scores, correct synthesized answer citing `02-startup-affiliate-flow.md` + `03-startup-delivery-ops.md`. **9/10 → 10/10. The bottleneck was the prompt, not the retrieval.**
 
 ## Failure log — the brief for Phase 2
 
@@ -65,7 +65,7 @@ Same tasks, same folder (`C:/laragon/www/my-stack/ai-agents-rag-phase1/`), in Co
 
 **RAG questions — all passed, quick:**
 - Jira cursor-ai automation: **11s**. Correct: planned for Phase 3, not built or running yet. Flow 1–5 (Jira task tagged cursor-ai → webhook → Cursor agent codes → commit → PR), OpenClaw as conversational entry point reporting back the PR link. Source: `04-cursor-sdk-jira-automation.md`.
-- Difference delivery ops vs affiliate flow: **10s**. Correct synthesis: affiliates are seller-facing (register, browse, submit orders, no stock/confirmation/delivery, margin commission only on delivery); delivery ops handle everything after (confirmation, preparation, stock/CRM, courier assignment, delivery, staff/partner/platform management, Shopify/Youcan/WooCommerce/Google Sheets integrations, commission after delivery). "In short: affiliates generate orders; delivery operations process and fulfil them." Sources: `02-onessta-affiliate-flow.md` + `03-onessta-delivery-ops.md`.
+- Difference delivery ops vs affiliate flow: **10s**. Correct synthesis: affiliates are seller-facing (register, browse, submit orders, no stock/confirmation/delivery, margin commission only on delivery); delivery ops handle everything after (confirmation, preparation, stock/CRM, courier assignment, delivery, staff/partner/platform management, Shopify/Youcan/WooCommerce/Google Sheets integrations, commission after delivery). "In short: affiliates generate orders; delivery operations process and fulfil them." Sources: `02-startup-affiliate-flow.md` + `03-startup-delivery-ops.md`.
 
 **What the comparison shows:**
 - My loop: 4–8 steps, local llama3.1:8b, text-parsed, drift (multiple Actions per reply, invented Observations, redundant re-reads), free, offline.
@@ -89,5 +89,5 @@ python agent.py "List the files in ./demo and summarise what this mini-project d
 # Track B
 cd naive-rag
 python ingest.py
-python query.py "What is the difference between Onessta delivery ops and affiliate flow?"
+python query.py "What is the difference between Startup delivery ops and affiliate flow?"
 ```

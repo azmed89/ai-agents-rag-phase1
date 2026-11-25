@@ -1,4 +1,4 @@
-# Demo mini-project: Onessta order flow (sample)
+# Demo mini-project: Startup order flow (sample)
 
 - `orders.py` handles order creation for affiliates.
 - `delivery.py` handles courier assignment.

@@ -24,12 +24,12 @@ From the `naive-rag` folder in Command Prompt, use the project's Python environm
 ```cmd
 py -3.12 -m venv .venv
 .venv\Scripts\python.exe -m pip install -r requirements.txt
-.venv\Scripts\python.exe graph.py "What is the difference between Onessta delivery ops and affiliate flow?"
+.venv\Scripts\python.exe graph.py "What is the difference between Startup delivery ops and affiliate flow?"
 ```
 
 ## Corpus
 
-`docs/` has 10 short docs from Med's real work — Onessta, Jira → Cursor SDK, OpenClaw, and the 5 GenAI demos. Replace them with your real PDFs/Markdown later; the pipeline doesn't care.
+`docs/` has 10 short docs from Med's real work — Startup, Jira → Cursor SDK, OpenClaw, and the 5 GenAI demos. Replace them with your real PDFs/Markdown later; the pipeline doesn't care.
 
 Chunking is in `ingest.py`: 300 words, 50 overlap (~400 tokens, 10–15%). Retrieval is plain cosine similarity, top-5, in-memory `store.json`.
 

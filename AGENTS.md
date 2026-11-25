@@ -16,4 +16,4 @@ python agent.py "List the files in ./demo and summarise what this mini-project d
 # Track B
 cd naive-rag
 python ingest.py
-python query.py "What is the difference between Onessta delivery ops and affiliate flow?"
+python query.py "What is the difference between Startup delivery ops and affiliate flow?"
